@@ -40,6 +40,10 @@ public class SmsAlertService implements AlertService {
 
     }
 
+    public void removeContact(String contact){
+        contacts.remove(contact);
+    }
+
     public Set<String> getContacts() {
         return contacts;
     }

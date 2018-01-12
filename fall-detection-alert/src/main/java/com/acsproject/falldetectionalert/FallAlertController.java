@@ -90,6 +90,20 @@ public class FallAlertController {
         return SUCCESS;
     }
 
+    @RequestMapping("remove/email/{contact}")
+    public ResponseEntity removeEmailContact(@PathVariable("contact") String contact) {
+        log.info("removing contact {} from Email contacts", contact);
+        emailAlertService.removeContact(contact);
+        return SUCCESS;
+    }
+
+    @RequestMapping("remove/sms/{contact}")
+    public ResponseEntity removeSmsContact(@PathVariable("contact") String contact) {
+        log.info("removing contact {} from SMS contacts", contact);
+        smsAlertService.removeContact(contact);
+        return SUCCESS;
+    }
+
     @ResponseBody
     @RequestMapping("contacts")
     public Map<String, Set<String>> getAllContacts() {

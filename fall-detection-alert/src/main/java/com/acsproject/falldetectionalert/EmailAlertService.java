@@ -42,6 +42,10 @@ public class EmailAlertService implements AlertService {
         contacts.add(contact);
     }
 
+    public void removeContact(String contact){
+        contacts.remove(contact);
+    }
+
     public Set<String> getContacts() {
         return contacts;
     }

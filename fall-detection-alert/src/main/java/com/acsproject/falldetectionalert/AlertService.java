@@ -8,5 +8,7 @@ public interface AlertService {
 
     void addContact(String contact) throws Exception;
 
+    void removeContact(String contact);
+
     Set<String> getContacts();
 }
