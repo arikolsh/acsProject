@@ -5,10 +5,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.ResponseBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.*;
 
@@ -66,6 +63,7 @@ public class FallAlertController {
         return SUCCESS;
     }
 
+    @CrossOrigin(origins = "http://localhost:63342")
     @RequestMapping("add/sms/{contact}") //valid contact example: "972507369191"
     public ResponseEntity addSmsContact(@PathVariable("contact") String contact) {
         try {
@@ -78,6 +76,7 @@ public class FallAlertController {
         return SUCCESS;
     }
 
+    @CrossOrigin(origins = "http://localhost:63342")
     @RequestMapping("add/email/{contact}")
     public ResponseEntity addEmailContact(@PathVariable("contact") String contact) {
         try {

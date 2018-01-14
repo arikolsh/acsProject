@@ -36,11 +36,15 @@ public class SmsAlertService implements AlertService {
         if (!contact.matches(NUMBERS_ONLY_REGEX) && contact.length() < 13 && contact.length() > 6) {
             throw new Exception("invalid number");
         }
+        if (contacts.contains(contact)) {
+            log.info("contact already added");
+            return;
+        }
         contacts.add(contact);
 
     }
 
-    public void removeContact(String contact){
+    public void removeContact(String contact) {
         contacts.remove(contact);
     }
 
@@ -69,6 +73,10 @@ public class SmsAlertService implements AlertService {
                 ALERT_MESSAGE));
 
         for (SmsSubmissionResult response : responses) {
+            if (response.getStatus() >= 1) {
+                log.error(response.toString());
+                throw new NexmoClientException();
+            }
             log.info(response.toString());
         }
     }

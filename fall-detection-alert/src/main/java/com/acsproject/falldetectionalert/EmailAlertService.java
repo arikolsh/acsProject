@@ -39,10 +39,14 @@ public class EmailAlertService implements AlertService {
         InternetAddress emailAddr = new InternetAddress(contact);
         emailAddr.validate();
         //add email if valid
+        if (contacts.contains(contact)) {
+            log.info("contact already added");
+            return;
+        }
         contacts.add(contact);
     }
 
-    public void removeContact(String contact){
+    public void removeContact(String contact) {
         contacts.remove(contact);
     }
 
