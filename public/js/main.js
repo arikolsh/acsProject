@@ -15,9 +15,49 @@ $(function () {
         addContactEvent(event, url, $('#form-messages-email'));
     });
 
+    // Get the form.
+    var delPhoneForm = $('#del-phone-form');
+    // Set up an event listener for the contact form.
+    $(delPhoneForm).submit(function (event) {
+        var url = 'http://localhost:8080/remove/sms/'.concat($('#delphone').val());
+        addContactEvent(event, url, $('#form-messages-delphone'));
+    });
+
+    // Get the form.
+    var delEmailForm = $('#del-email-form');
+    // Set up an event listener for the contact form.
+    $(delEmailForm).submit(function (event) {
+        var url = 'http://localhost:8080/remove/email/'.concat($('#delemail').val());
+        addContactEvent(event, url, $('#form-messages-delemail'));
+    });
+
 });
 
 function addContactEvent(event, url, resultElem) {
+    // Stop the browser from submitting the form.
+    event.preventDefault();
+    // Submit the form using AJAX.
+    console.log('sending GET to ' + url);
+    $.ajax({
+        type: 'GET',
+        url: url,
+    }).done(function (response) {
+        // Set the message text.
+        console.log(response);
+        $(resultElem).html(response + " &#10003");
+        $(resultElem).css("color", "#468847");
+    }).fail(function (data) {
+        $(resultElem).css("color", "#b94a48");
+        // Set the message text.
+        if (data.responseText !== '') {
+            $(resultElem).text(data.responseText);
+        } else {
+            $(resultElem).text('Oops! An error occured and your data could not be sent.');
+        }
+    });
+}
+
+function delContactEvent(event, url, resultElem) {
     // Stop the browser from submitting the form.
     event.preventDefault();
     // Submit the form using AJAX.
