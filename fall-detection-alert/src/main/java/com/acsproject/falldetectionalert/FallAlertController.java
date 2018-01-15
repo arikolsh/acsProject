@@ -89,6 +89,7 @@ public class FallAlertController {
         return SUCCESS;
     }
 
+    @CrossOrigin(origins = "http://localhost:63342")
     @RequestMapping("remove/email/{contact}")
     public ResponseEntity removeEmailContact(@PathVariable("contact") String contact) {
         log.info("removing contact {} from Email contacts", contact);
@@ -96,6 +97,7 @@ public class FallAlertController {
         return SUCCESS;
     }
 
+    @CrossOrigin(origins = "http://localhost:63342")
     @RequestMapping("remove/sms/{contact}")
     public ResponseEntity removeSmsContact(@PathVariable("contact") String contact) {
         log.info("removing contact {} from SMS contacts", contact);
@@ -103,6 +105,7 @@ public class FallAlertController {
         return SUCCESS;
     }
 
+    @CrossOrigin(origins = "http://localhost:63342")
     @ResponseBody
     @RequestMapping("contacts")
     public Map<String, Set<String>> getAllContacts() {
@@ -112,12 +115,14 @@ public class FallAlertController {
         return all;
     }
 
+    @CrossOrigin(origins = "http://localhost:63342")
     @ResponseBody
     @RequestMapping("contacts/email")
     public Set<String> getEmailContacts() {
         return emailAlertService.getContacts();
     }
 
+    @CrossOrigin(origins = "http://localhost:63342")
     @ResponseBody
     @RequestMapping("contacts/sms")
     public Set<String> getSmsContacts() {
