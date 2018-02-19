@@ -15,7 +15,7 @@ public class GeneralConfig {
     @Autowired
     private AlertService emailAlertService;
 
-    private Logger log = LoggerFactory.getLogger(FallAlertController.class);
+    private Logger log = LoggerFactory.getLogger(AlertController.class);
 
     @Scheduled(fixedRate = 15000)
     public void reportContacts() {

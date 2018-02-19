@@ -14,6 +14,7 @@ $(function () {
     var addEmailForm = $('#add-email-form');
     // Set up an event listener for the contact form.
     $(addEmailForm).submit(function (event) {
+        console.log($('#email').val());
         var url = 'http://localhost:8080/add/email/'.concat($('#email').val());
         addContactEvent(event, url, $('#form-messages-email'));
     });
@@ -47,7 +48,7 @@ function addContactEvent(event, url, resultElem) {
     }).done(function (response) {
         // Set the message text.
         console.log(response);
-        $(resultElem).html(response + " &#10003");
+        $(resultElem).html(response.message + " &#10003");
         $(resultElem).css("color", "#468847");
         fetchContacts();
     }).fail(function (data) {
@@ -69,7 +70,7 @@ function delContactEvent(event, url, resultElem) {
     }).done(function (response) {
         // Set the message text.
         console.log(response);
-        $(resultElem).html(response + " &#10003");
+        $(resultElem).html(response.message + " &#10003");
         $(resultElem).css("color", "#468847");
         fetchContacts();
     }).fail(function (data) {

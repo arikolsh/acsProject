@@ -6,9 +6,8 @@ import org.springframework.scheduling.annotation.EnableScheduling;
 
 @EnableScheduling
 @SpringBootApplication
-public class FallDetectionAlertApplication {
-
+public class Application {
     public static void main(String[] args) {
-        SpringApplication.run(FallDetectionAlertApplication.class, args);
+        SpringApplication.run(Application.class, args);
     }
 }

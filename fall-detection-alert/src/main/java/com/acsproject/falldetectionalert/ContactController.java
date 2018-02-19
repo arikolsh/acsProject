@@ -7,12 +7,17 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.*;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Set;
 
 @RestController
-public class FallAlertController {
+public class ContactController {
 
-    private Logger log = LoggerFactory.getLogger(FallAlertController.class);
+    public static final ResponseEntity<AlertResponse> FAILURE = new ResponseEntity<>(new AlertResponse("failure"), HttpStatus.INTERNAL_SERVER_ERROR);
+    public static final ResponseEntity<AlertResponse> SUCCESS = new ResponseEntity<>(new AlertResponse("success"), HttpStatus.OK);
+
+    private Logger log = LoggerFactory.getLogger(ContactController.class);
 
     @Autowired
     private AlertService smsAlertService;
@@ -20,50 +25,7 @@ public class FallAlertController {
     @Autowired
     private AlertService emailAlertService;
 
-    private ResponseEntity<String> FAILURE = new ResponseEntity<>("failure", HttpStatus.INTERNAL_SERVER_ERROR);
-    private ResponseEntity<String> SUCCESS = new ResponseEntity<>("success", HttpStatus.OK);
-    private ResponseEntity<String> EMPTY = new ResponseEntity<>("", HttpStatus.OK);
-
-    @RequestMapping("/")
-    public ResponseEntity index() {
-        return EMPTY;
-    }
-
-    @RequestMapping("/alert")
-    public ResponseEntity alertAll() {
-        try {
-            emailAlertService.alert();
-            smsAlertService.alert();
-        } catch (Exception e) {
-            log.error("error sending alerts", e);
-            return FAILURE;
-        }
-        return SUCCESS;
-    }
-
-    @RequestMapping("/alert/email")
-    public ResponseEntity emailAlert() {
-        try {
-            emailAlertService.alert();
-        } catch (Exception e) {
-            log.error("error sending email alert", e);
-            return FAILURE;
-        }
-        return SUCCESS;
-    }
-
-    @RequestMapping("/alert/sms")
-    public ResponseEntity smsAlert() {
-        try {
-            smsAlertService.alert();
-        } catch (Exception e) {
-            log.error("error sending sms alert", e);
-            return FAILURE;
-        }
-        return SUCCESS;
-    }
-
-    @CrossOrigin(origins = "http://localhost:63342")
+    @CrossOrigin
     @RequestMapping("add/sms/{contact}") //valid contact example: "972507369191"
     public ResponseEntity addSmsContact(@PathVariable("contact") String contact) {
         try {
@@ -76,8 +38,8 @@ public class FallAlertController {
         return SUCCESS;
     }
 
-    @CrossOrigin(origins = "http://localhost:63342")
-    @RequestMapping("add/email/{contact}")
+    @CrossOrigin
+    @RequestMapping("add/email/{contact:.+}")
     public ResponseEntity addEmailContact(@PathVariable("contact") String contact) {
         try {
             log.info("adding contact {} to Email contacts", contact);
@@ -89,15 +51,15 @@ public class FallAlertController {
         return SUCCESS;
     }
 
-    @CrossOrigin(origins = "http://localhost:63342")
-    @RequestMapping("remove/email/{contact}")
+    @CrossOrigin
+    @RequestMapping("remove/email/{contact:.+}")
     public ResponseEntity removeEmailContact(@PathVariable("contact") String contact) {
         log.info("removing contact {} from Email contacts", contact);
         emailAlertService.removeContact(contact);
         return SUCCESS;
     }
 
-    @CrossOrigin(origins = "http://localhost:63342")
+    @CrossOrigin
     @RequestMapping("remove/sms/{contact}")
     public ResponseEntity removeSmsContact(@PathVariable("contact") String contact) {
         log.info("removing contact {} from SMS contacts", contact);
@@ -105,7 +67,7 @@ public class FallAlertController {
         return SUCCESS;
     }
 
-    @CrossOrigin(origins = "http://localhost:63342")
+    @CrossOrigin
     @ResponseBody
     @RequestMapping("contacts")
     public Map<String, Set<String>> getAllContacts() {
@@ -115,14 +77,14 @@ public class FallAlertController {
         return all;
     }
 
-    @CrossOrigin(origins = "http://localhost:63342")
+    @CrossOrigin
     @ResponseBody
     @RequestMapping("contacts/email")
     public Set<String> getEmailContacts() {
         return emailAlertService.getContacts();
     }
 
-    @CrossOrigin(origins = "http://localhost:63342")
+    @CrossOrigin
     @ResponseBody
     @RequestMapping("contacts/sms")
     public Set<String> getSmsContacts() {
