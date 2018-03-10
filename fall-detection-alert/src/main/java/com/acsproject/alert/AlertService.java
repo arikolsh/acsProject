@@ -1,4 +1,4 @@
-package com.acsproject.falldetectionalert;
+package com.acsproject.alert;
 
 import java.util.Set;
 
@@ -11,4 +11,8 @@ public interface AlertService {
     void removeContact(String contact);
 
     Set<String> getContacts();
+
+    AlertType getType();
 }
+
+

@@ -1,4 +1,4 @@
-package com.acsproject.falldetectionalert;
+package com.acsproject.alert;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -6,6 +6,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
+import static com.acsproject.alert.AlertType.*;
 
 @RestController
 public class AlertController {
@@ -17,10 +19,7 @@ public class AlertController {
     private Logger log = LoggerFactory.getLogger(AlertController.class);
 
     @Autowired
-    private AlertService smsAlertService;
-
-    @Autowired
-    private AlertService emailAlertService;
+    private AlertServiceFactory alertServiceFactory;
 
     @RequestMapping("/")
     public ResponseEntity index() {
@@ -30,8 +29,8 @@ public class AlertController {
     @RequestMapping("/alert")
     public ResponseEntity alertAll() {
         try {
-            emailAlertService.alert();
-            smsAlertService.alert();
+            alertServiceFactory.getService(EMAIL).alert();
+            alertServiceFactory.getService(SMS).alert();
         } catch (Exception e) {
             log.error("error sending alerts", e);
             return FAILURE;
@@ -43,7 +42,7 @@ public class AlertController {
     @RequestMapping("/alert/email")
     public ResponseEntity emailAlert() {
         try {
-            emailAlertService.alert();
+            alertServiceFactory.getService(EMAIL).alert();
         } catch (Exception e) {
             log.error("error sending email alert", e);
             return FAILURE;
@@ -54,7 +53,7 @@ public class AlertController {
     @RequestMapping("/alert/sms")
     public ResponseEntity smsAlert() {
         try {
-            smsAlertService.alert();
+            alertServiceFactory.getService(SMS).alert();
         } catch (Exception e) {
             log.error("error sending sms alert", e);
             return FAILURE;

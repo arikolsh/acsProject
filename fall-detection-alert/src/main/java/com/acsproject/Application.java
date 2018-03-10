@@ -1,4 +1,4 @@
-package com.acsproject.falldetectionalert;
+package com.acsproject;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;

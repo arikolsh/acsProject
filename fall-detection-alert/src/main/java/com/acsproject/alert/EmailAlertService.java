@@ -1,7 +1,8 @@
-package com.acsproject.falldetectionalert;
+package com.acsproject.alert;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import javax.annotation.PostConstruct;
@@ -52,6 +53,11 @@ public class EmailAlertService implements AlertService {
 
     public Set<String> getContacts() {
         return contacts;
+    }
+
+    @Override
+    public AlertType getType() {
+        return AlertType.EMAIL;
     }
 
     public void alert() throws Exception {

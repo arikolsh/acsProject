@@ -1,4 +1,4 @@
-package com.acsproject.falldetectionalert;
+package com.acsproject;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;

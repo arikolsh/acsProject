@@ -1,5 +1,8 @@
-package com.acsproject.falldetectionalert;
+package com.acsproject.alert;
 
+import com.acsproject.GeneralConfig;
+import com.acsproject.contacts.Contact;
+import com.acsproject.contacts.ContactRepository;
 import com.nexmo.client.NexmoClient;
 import com.nexmo.client.NexmoClientException;
 import com.nexmo.client.auth.AuthMethod;
@@ -13,7 +16,9 @@ import org.springframework.stereotype.Component;
 import javax.annotation.PostConstruct;
 import java.io.IOException;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 @Component
 public class SmsAlertService implements AlertService {
@@ -50,6 +55,11 @@ public class SmsAlertService implements AlertService {
 
     public Set<String> getContacts() {
         return contacts;
+    }
+
+    @Override
+    public AlertType getType() {
+        return AlertType.SMS;
     }
 
     public void alert() throws Exception {
