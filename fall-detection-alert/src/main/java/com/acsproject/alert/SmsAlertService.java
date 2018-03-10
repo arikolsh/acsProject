@@ -11,6 +11,7 @@ import com.nexmo.client.sms.SmsSubmissionResult;
 import com.nexmo.client.sms.messages.TextMessage;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import javax.annotation.PostConstruct;
@@ -32,9 +33,13 @@ public class SmsAlertService implements AlertService {
     private Logger log = LoggerFactory.getLogger(GeneralConfig.class);
     private Set<String> contacts;
 
+    @Autowired
+    private ContactRepository contactRepository;
+
     @PostConstruct
     public void init() {
-        contacts = new HashSet<>();
+        contacts = contactRepository.findByType(getType().getName()).stream().map(Contact::getTarget).collect(Collectors.toSet());
+
     }
 
     public void addContact(String contact) throws Exception {
@@ -46,11 +51,12 @@ public class SmsAlertService implements AlertService {
             return;
         }
         contacts.add(contact);
-
+        contactRepository.save(new Contact(getType().getName(), contact));
     }
 
     public void removeContact(String contact) {
         contacts.remove(contact);
+        contactRepository.delete(contact);
     }
 
     public Set<String> getContacts() {

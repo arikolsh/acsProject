@@ -1,5 +1,7 @@
 package com.acsproject.alert;
 
+import com.acsproject.contacts.Contact;
+import com.acsproject.contacts.ContactRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -11,6 +13,7 @@ import javax.mail.internet.AddressException;
 import javax.mail.internet.InternetAddress;
 import javax.mail.internet.MimeMessage;
 import java.util.*;
+import java.util.stream.Collectors;
 
 @Component
 public class EmailAlertService implements AlertService {
@@ -22,11 +25,14 @@ public class EmailAlertService implements AlertService {
     private Properties emailServerProps;
     private Set<String> contacts;
 
+    @Autowired
+    private ContactRepository contactRepository;
+
     private Logger log = LoggerFactory.getLogger(EmailAlertService.class);
 
     @PostConstruct
     private void init() {
-        contacts = new HashSet<>();
+        contacts = contactRepository.findByType(getType().getName()).stream().map(Contact::getTarget).collect(Collectors.toSet());
         //init gmail server properties
         emailServerProps = new Properties();
         emailServerProps.put("mail.smtp.host", "smtp.gmail.com"); //SMTP Host
@@ -45,10 +51,12 @@ public class EmailAlertService implements AlertService {
             return;
         }
         contacts.add(contact);
+        contactRepository.save(new Contact(getType().getName(), contact));
     }
 
     public void removeContact(String contact) {
         contacts.remove(contact);
+        contactRepository.delete(contact);
     }
 
     public Set<String> getContacts() {

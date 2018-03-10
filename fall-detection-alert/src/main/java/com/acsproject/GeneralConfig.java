@@ -23,9 +23,6 @@ public class GeneralConfig {
     @Autowired
     private AlertServiceFactory alertServiceFactory;
 
-    @Autowired
-    ContactRepository contactRepository;
-
     private Logger log = LoggerFactory.getLogger(AlertController.class);
     @Scheduled(fixedRate = 30000)
     public void reportContacts() {

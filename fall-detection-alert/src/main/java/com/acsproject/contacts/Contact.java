@@ -15,13 +15,10 @@ import java.io.Serializable;
 @Table(name = "contact")
 public class Contact implements Serializable {
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
-    private long id;
-
     @Column(name = "type")
     private String type;
 
+    @Id
     @Column(name = "target")
     private String target;
 
