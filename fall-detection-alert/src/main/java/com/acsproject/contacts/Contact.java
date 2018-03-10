@@ -15,13 +15,12 @@ import java.io.Serializable;
 @Table(name = "contact")
 public class Contact implements Serializable {
 
-    private static final long serialVersionUID = -3009157732242241606L;
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private long id;
 
     @Column(name = "type")
-    private AlertType type;
+    private String type;
 
     @Column(name = "target")
     private String target;

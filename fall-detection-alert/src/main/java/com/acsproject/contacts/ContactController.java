@@ -24,6 +24,9 @@ public class ContactController {
     private Logger log = LoggerFactory.getLogger(ContactController.class);
 
     @Autowired
+    private  ContactRepository contactRepository;
+
+    @Autowired
     private AlertServiceFactory alertServiceFactory;
 
     @CrossOrigin
