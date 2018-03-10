@@ -1,5 +1,8 @@
-package com.acsproject.falldetectionalert;
+package com.acsproject.alert;
 
+import com.acsproject.GeneralConfig;
+import com.acsproject.contacts.Contact;
+import com.acsproject.contacts.ContactRepository;
 import com.nexmo.client.NexmoClient;
 import com.nexmo.client.NexmoClientException;
 import com.nexmo.client.auth.AuthMethod;
@@ -8,12 +11,15 @@ import com.nexmo.client.sms.SmsSubmissionResult;
 import com.nexmo.client.sms.messages.TextMessage;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import javax.annotation.PostConstruct;
 import java.io.IOException;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 @Component
 public class SmsAlertService implements AlertService {
@@ -27,9 +33,13 @@ public class SmsAlertService implements AlertService {
     private Logger log = LoggerFactory.getLogger(GeneralConfig.class);
     private Set<String> contacts;
 
+    @Autowired
+    private ContactRepository contactRepository;
+
     @PostConstruct
     public void init() {
-        contacts = new HashSet<>();
+        contacts = contactRepository.findByType(getType().getName()).stream().map(Contact::getTarget).collect(Collectors.toSet());
+
     }
 
     public void addContact(String contact) throws Exception {
@@ -41,15 +51,21 @@ public class SmsAlertService implements AlertService {
             return;
         }
         contacts.add(contact);
-
+        contactRepository.save(new Contact(getType().getName(), contact));
     }
 
     public void removeContact(String contact) {
         contacts.remove(contact);
+        contactRepository.delete(contact);
     }
 
     public Set<String> getContacts() {
         return contacts;
+    }
+
+    @Override
+    public AlertType getType() {
+        return AlertType.SMS;
     }
 
     public void alert() throws Exception {

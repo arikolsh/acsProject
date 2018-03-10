@@ -1,4 +1,4 @@
-package com.acsproject.falldetectionalert;
+package com.acsproject.alert;
 
 import lombok.*;
 

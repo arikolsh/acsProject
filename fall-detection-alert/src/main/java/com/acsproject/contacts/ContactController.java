@@ -1,5 +1,7 @@
-package com.acsproject.falldetectionalert;
+package com.acsproject.contacts;
 
+import com.acsproject.alert.AlertResponse;
+import com.acsproject.alert.AlertServiceFactory;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -11,6 +13,8 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
 
+import static com.acsproject.alert.AlertType.*;
+
 @RestController
 public class ContactController {
 
@@ -20,17 +24,17 @@ public class ContactController {
     private Logger log = LoggerFactory.getLogger(ContactController.class);
 
     @Autowired
-    private AlertService smsAlertService;
+    private  ContactRepository contactRepository;
 
     @Autowired
-    private AlertService emailAlertService;
+    private AlertServiceFactory alertServiceFactory;
 
     @CrossOrigin
     @RequestMapping("add/sms/{contact}") //valid contact example: "972507369191"
     public ResponseEntity addSmsContact(@PathVariable("contact") String contact) {
         try {
             log.info("adding contact {} to SMS contacts", contact);
-            smsAlertService.addContact(contact);
+            alertServiceFactory.getService(SMS).addContact(contact);
         } catch (Exception e) {
             log.error("failed to add contact", e);
             return FAILURE;
@@ -43,7 +47,7 @@ public class ContactController {
     public ResponseEntity addEmailContact(@PathVariable("contact") String contact) {
         try {
             log.info("adding contact {} to Email contacts", contact);
-            emailAlertService.addContact(contact);
+            alertServiceFactory.getService(EMAIL).addContact(contact);
         } catch (Exception e) {
             log.error("failed to add contact", e);
             return FAILURE;
@@ -55,7 +59,7 @@ public class ContactController {
     @RequestMapping("remove/email/{contact:.+}")
     public ResponseEntity removeEmailContact(@PathVariable("contact") String contact) {
         log.info("removing contact {} from Email contacts", contact);
-        emailAlertService.removeContact(contact);
+        alertServiceFactory.getService(EMAIL).removeContact(contact);
         return SUCCESS;
     }
 
@@ -63,7 +67,7 @@ public class ContactController {
     @RequestMapping("remove/sms/{contact}")
     public ResponseEntity removeSmsContact(@PathVariable("contact") String contact) {
         log.info("removing contact {} from SMS contacts", contact);
-        smsAlertService.removeContact(contact);
+        alertServiceFactory.getService(SMS).removeContact(contact);
         return SUCCESS;
     }
 
@@ -72,8 +76,8 @@ public class ContactController {
     @RequestMapping("contacts")
     public Map<String, Set<String>> getAllContacts() {
         Map<String, Set<String>> all = new HashMap();
-        all.put("email", emailAlertService.getContacts());
-        all.put("sms", smsAlertService.getContacts());
+        all.put("email", alertServiceFactory.getService(EMAIL).getContacts());
+        all.put("sms", alertServiceFactory.getService(SMS).getContacts());
         return all;
     }
 
@@ -81,14 +85,14 @@ public class ContactController {
     @ResponseBody
     @RequestMapping("contacts/email")
     public Set<String> getEmailContacts() {
-        return emailAlertService.getContacts();
+        return alertServiceFactory.getService(EMAIL).getContacts();
     }
 
     @CrossOrigin
     @ResponseBody
     @RequestMapping("contacts/sms")
     public Set<String> getSmsContacts() {
-        return smsAlertService.getContacts();
+        return alertServiceFactory.getService(SMS).getContacts();
     }
 
 }
