@@ -1,6 +1,7 @@
 package com.acsproject.contacts;
 
 import com.acsproject.alert.AlertResponse;
+import com.acsproject.alert.AlertService;
 import com.acsproject.alert.AlertServiceFactory;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -10,6 +11,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 
@@ -28,6 +30,22 @@ public class ContactController {
 
     @Autowired
     private AlertServiceFactory alertServiceFactory;
+
+    @CrossOrigin
+    @RequestMapping("delete-all-contacts") //todo: delete
+    public ResponseEntity deleteAllContacts() {
+        try {
+            log.info("deleting all contacts");
+            AlertService smsService = alertServiceFactory.getService(SMS);
+            AlertService emailService = alertServiceFactory.getService(EMAIL);
+            new HashSet<>(smsService.getContacts()).forEach(c->smsService.removeContact(c));
+            new HashSet<>(emailService.getContacts()).forEach(c->emailService.removeContact(c));
+        } catch (Exception e) {
+            log.error("failed to remove all contacts", e);
+            return FAILURE;
+        }
+        return SUCCESS;
+    }
 
     @CrossOrigin
     @RequestMapping("add/sms/{contact}") //valid contact example: "972507369191"
@@ -94,5 +112,6 @@ public class ContactController {
     public Set<String> getSmsContacts() {
         return alertServiceFactory.getService(SMS).getContacts();
     }
+
 
 }

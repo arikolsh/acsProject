@@ -90,7 +90,10 @@ function fetchPhones() {
         // Set the message text.
         console.log(response);
         empty(phonesContainer);
-        phonesContainer.html("<p>" + response + "</p>");
+        for (var i = 0; i < response.length; i++) {
+            phonesContainer.append(response[i] + "<br>");
+        }
+      //  phonesContainer.html("<p>" + response + "</p>");
     }).fail(function (data) {
         empty(phonesContainer);
         phonesContainer.css("color", "black");
@@ -108,7 +111,10 @@ function fetchEmails() {
         // Set the message text.
         console.log(response);
         empty(emailsContainer);
-        emailsContainer.html("<p>" + response + "</p>");
+        for (var i = 0; i < response.length; i++) {
+            emailsContainer.append(response[i] + "<br>");
+        }
+        //emailsContainer.html("<p>" + response + "</p>");
     }).fail(function (data) {
         empty(emailsContainer);
         emailsContainer.css("color", "black");
